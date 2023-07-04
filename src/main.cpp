@@ -6,7 +6,8 @@
 
 const int WIDTH = 800, HEIGHT = 600;
 
-Tile tile{10, 20};
+GameHandler gameHandler{};
+Tile tile{10, 20, gameHandler};
 bool xx = tile.GetIsOpen();
 
 int main(int argc, char* argv[]) {
@@ -18,8 +19,6 @@ int main(int argc, char* argv[]) {
     return 1;
   }
   SDL_Event windowEvent;
-
-  std::cout << xx << std::endl;
 
   while (true) {
     if (SDL_PollEvent(&windowEvent)) {

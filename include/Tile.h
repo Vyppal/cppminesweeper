@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GameHandler.h"
+
 enum TileState {
   /** The starting state of a tile (closed. unflagged) */
   kInactive,
@@ -18,7 +20,7 @@ struct TileInformation {
 
 class Tile {
  public:
-  Tile(int xPos, int yPos);
+  Tile(int xPos, int yPos, GameHandler &gameHandler);
   
   // Check if the tile is flagged
   bool GetIsFlagged();
@@ -42,4 +44,5 @@ class Tile {
   int _xPos, _yPos;
   TileState _tileState;
   TileInformation _tileInformation;
+  GameHandler *_gameHandler;
 };
