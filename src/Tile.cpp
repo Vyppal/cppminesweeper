@@ -1,6 +1,6 @@
 #include "Tile.h"
 
-Tile::Tile(int xPos, int yPos, GameHandler &gameHandler) : _xPos(xPos), _yPos(yPos), _gameHandler(&gameHandler) {};
+Tile::Tile(int xPos, int yPos, GameHandler *gameHandler) : _xPos(xPos), _yPos(yPos), _gameHandler(gameHandler) {};
 
 bool Tile::GetIsFlagged() {   return (_tileState == TileState::kFlagged);   }
 bool Tile::GetIsOpen() {   return (_tileState == TileState::kActive);   }
@@ -29,4 +29,14 @@ void Tile::SwitchFlagTileState() {
 void Tile::SchrodingerTile() {
   if (_tileState != TileState::kInactive) {   return;   }
   _tileState = TileState::kSchrodingerState;
+}
+
+void Tile::SetMine() {
+  _tileInformation.isMine = true;
+}
+void Tile::AddAdjacentMine() {
+  _tileInformation.adjacentMineCount = _tileInformation.adjacentMineCount + 1;
+}
+TileInformation Tile::GetTileInformation() {
+  return _tileInformation;
 }

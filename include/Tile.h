@@ -14,13 +14,13 @@ enum TileState {
 };
 
 struct TileInformation {
-  int adjacentMineCount;
+  int adjacentMineCount = 0;
   bool isMine;
 };
 
 class Tile {
  public:
-  Tile(int xPos, int yPos, GameHandler &gameHandler);
+  Tile(int xPos, int yPos, GameHandler *gameHandler);
   
   // Check if the tile is flagged
   bool GetIsFlagged();
@@ -36,9 +36,12 @@ class Tile {
   // "Highlights" the current tile
   void SchrodingerTile();
 
+  void SetMine();
+  void AddAdjacentMine();
+
   // Gets the tile\s current state
   TileState GetTileState();
-
+  TileInformation GetTileInformation();
 
  private:
   int _xPos, _yPos;

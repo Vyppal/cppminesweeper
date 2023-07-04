@@ -3,12 +3,13 @@
 #include <SDL2/SDL_image.h>
 #include "Tile.h"
 #include "GameHandler.h"
+#include "Board.h"
 
 const int WIDTH = 800, HEIGHT = 600;
 
 GameHandler gameHandler{};
-Tile tile{10, 20, gameHandler};
-bool xx = tile.GetIsOpen();
+BoardData boardData{10, 10, 4};
+Board board{boardData, &gameHandler};
 
 int main(int argc, char* argv[]) {
   SDL_Init( SDL_INIT_EVERYTHING );
