@@ -1,7 +1,8 @@
 #include "GameHandler.h"
 
-GameHandler::GameHandler() {};
+GameHandler::GameHandler(GameConfig gameConfig) : _gameConfig(gameConfig) {};
 
-void GameHandler::SendActiveMineRequest() {
-  _isMineActive = true;
-}
+void GameHandler::SendActiveMineRequest() {   _isMineActive = true;   }
+
+GameConfig GameHandler::GetConfig() {   return _gameConfig;   }
+

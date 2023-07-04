@@ -58,7 +58,7 @@ void Board::CreateNewBoard(BoardData boardData) {
   Position activePosition;
 
   int totalMinesToPlace = allTiles.size() / boardData.mineDensity;
-
+  std::cout << totalMinesToPlace << std::endl;
   for (int placedMines = 0; placedMines < totalMinesToPlace; placedMines++) {
     randomTileIndex = rand() % allTiles.size();
     activePosition = allTiles[randomTileIndex];
@@ -70,7 +70,8 @@ void Board::CreateNewBoard(BoardData boardData) {
     }
   }
 
-
+  
+  _board[2][1].db1();
 
   // Debugging print grid to console
   std::string line;
@@ -81,7 +82,7 @@ void Board::CreateNewBoard(BoardData boardData) {
         line += "X ";
       }
       else {
-        line += std::to_string(tile.GetTileInformation().adjacentMineCount);
+        line += std::to_string(tile.GetInformation().adjacentMineCount);
         line += " ";
       }
     }
@@ -89,6 +90,7 @@ void Board::CreateNewBoard(BoardData boardData) {
   }
 }
 
+std::vector<std::vector<Tile>> Board::GetBoard() {   return _board;   }
 
 Board::Board(BoardData boardData, GameHandler *gameHandler) : _boardData(boardData), _gameHandler(gameHandler) {
   Board::CreateNewBoard(boardData);
