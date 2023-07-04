@@ -1,8 +1,13 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include "Tile.h"
+#include "GameHandler.h"
 
 const int WIDTH = 800, HEIGHT = 600;
+
+Tile tile{10, 20};
+bool xx = tile.GetIsOpen();
 
 int main(int argc, char* argv[]) {
   SDL_Init( SDL_INIT_EVERYTHING );
@@ -14,6 +19,7 @@ int main(int argc, char* argv[]) {
   }
   SDL_Event windowEvent;
 
+  std::cout << xx << std::endl;
 
   while (true) {
     if (SDL_PollEvent(&windowEvent)) {
