@@ -65,16 +65,15 @@ void Board::CreateNewBoard(BoardData boardData) {
     _board[activePosition.y][activePosition.x].SetMine();
     allTiles.erase(allTiles.begin() + randomTileIndex);
     std::vector<Position> adjacentPositions = GetAdjacentTileCoordinates(activePosition);
-    std::cout << adjacentPositions.size() << std::endl;
     for (Position pos : adjacentPositions) {
-      std::cout << pos.x << "," << pos.y << std::endl;
       _board[pos.y][pos.x].AddAdjacentMine();
     }
   }
 
+
+
+  // Debugging print grid to console
   std::string line;
-  std::cout << _board.size() << std::endl;
-  std::cout << _board[0].size() << std::endl;
   for (auto row : _board) {
     line = "";
     for (auto tile : row) {
