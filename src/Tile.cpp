@@ -40,3 +40,6 @@ void Tile::AddAdjacentMine() {
 TileInformation Tile::GetTileInformation() {
   return _tileInformation;
 }
+
+int Tile::GetXPos() {   return _xPos;   }
+int Tile::GetYPos() {   return _yPos;   }

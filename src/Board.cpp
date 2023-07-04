@@ -89,6 +89,8 @@ void Board::CreateNewBoard(BoardData boardData) {
   }
 }
 
+std::vector<std::vector<Tile>> Board::GetBoard() {   return _board;   }
+
 
 Board::Board(BoardData boardData, GameHandler *gameHandler) : _boardData(boardData), _gameHandler(gameHandler) {
   Board::CreateNewBoard(boardData);

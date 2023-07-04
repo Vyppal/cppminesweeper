@@ -52,7 +52,15 @@ int main(int argc, char* argv[]) {
     if (SDL_PollEvent(&windowEvent)) {
       if (SDL_QUIT == windowEvent.type) {  break;  }
     }
-    SDL_BlitScaled( imageSurface, NULL, windowSurface, new SDL_Rect{160, 120, 320, 240} );
+
+
+
+    for (auto row : board.GetBoard()) {
+      for (auto tile : row) {
+        SDL_Surface *imageSurface1 = IMG_Load("res/textures/mine.png");
+        SDL_BlitScaled( imageSurface, NULL, windowSurface, new SDL_Rect{tile.GetXPos() * TILE_SIZE, tile.GetYPos() * TILE_SIZE, TILE_SIZE, TILE_SIZE} );
+      }
+    }
     SDL_UpdateWindowSurface( window );
   }
 

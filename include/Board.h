@@ -21,6 +21,7 @@ class Board {
   Board(BoardData boardData, GameHandler *gameHandler);
 
   void CreateNewBoard(BoardData boardData);
+  std::vector<std::vector<Tile>> GetBoard();
   std::vector<Position> GetAdjacentTileCoordinates(Position tilePosition);
 
 

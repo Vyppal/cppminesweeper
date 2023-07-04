@@ -29,6 +29,9 @@ class Tile {
   // Check if the tile is a mine
   bool GetIsMine();
 
+  int GetXPos();
+  int GetYPos();
+
   // Opens the tile if it's not open, nor flagged
   void OpenTile();
   // Sets the tile to flagged if it is inactive, and inactive if it is flagged
