@@ -2,8 +2,6 @@
 
 #include "Tile.h"
 #include <vector>
-#include "GameHandler.h"
-
 
 struct BoardData {
   int width;
@@ -18,15 +16,16 @@ struct Position {
 
 class Board {
  public:
-  Board(BoardData boardData, GameHandler *gameHandler);
+  Board(BoardData boardData);
 
   void CreateNewBoard(BoardData boardData);
-  std::vector<std::vector<Tile>> GetBoard();
+  std::vector<std::vector<Tile>> *GetBoard();
   std::vector<Position> GetAdjacentTileCoordinates(Position tilePosition);
 
+  void SchrodingerTiles(Position epicentre);
+  void OpenTileGroup(Position epicentre);
 
  private:
   BoardData _boardData;
-  GameHandler *_gameHandler;
   std::vector<std::vector<Tile>> _board;
 };

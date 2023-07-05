@@ -46,7 +46,7 @@ void Board::CreateNewBoard(BoardData boardData) {
   for (int h = 0; h < boardData.height; h++){
     tempTileList.clear();
     for (int w = 0; w < boardData.width; w++){
-      Tile newTile{w, h, _gameHandler};
+      Tile newTile{w, h};
       tempTileList.push_back(newTile);
       Position tilePosition{w, h};
       allTiles.push_back(tilePosition);
@@ -89,9 +89,34 @@ void Board::CreateNewBoard(BoardData boardData) {
   }
 }
 
-std::vector<std::vector<Tile>> Board::GetBoard() {   return _board;   }
+std::vector<std::vector<Tile>> *Board::GetBoard() {   return &_board;   }
 
 
-Board::Board(BoardData boardData, GameHandler *gameHandler) : _boardData(boardData), _gameHandler(gameHandler) {
+
+void Board::SchrodingerTiles(Position epicentre) {
+  std::vector<Position> adjacentPositions = GetAdjacentTileCoordinates(epicentre);
+  for (Position pos : adjacentPositions) {
+    _board[pos.y][pos.x].SchrodingerTile();
+  }
+}
+
+void Board::OpenTileGroup(Position epicentre) {
+  std::vector<Position> adjacentPositions = GetAdjacentTileCoordinates(epicentre);
+  Tile epicentreTile = _board[epicentre.y][epicentre.x];
+  if (!epicentreTile.GetIsOpen()) {   return;   }
+  int adjacentFlagCount = 0;
+  for (Position pos : adjacentPositions) {
+    if (_board[epicentre.y][epicentre.x].GetIsFlagged()) {   adjacentFlagCount++;   }
+  }
+  if (adjacentFlagCount != epicentreTile.GetInformation().adjacentMineCount) {   return;   }
+  for (Position pos : adjacentPositions) {
+    _board[epicentre.y][epicentre.x].OpenTile();
+  }
+}
+
+
+
+
+Board::Board(BoardData boardData) : _boardData(boardData) {
   Board::CreateNewBoard(boardData);
 }

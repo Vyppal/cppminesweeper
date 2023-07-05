@@ -1,20 +1,22 @@
 #include "Tile.h"
 #include <map>
+#include <iostream>
 
-Tile::Tile(int xPos, int yPos, GameHandler *gameHandler) : _xPos(xPos), _yPos(yPos), _gameHandler(gameHandler) {};
+Tile::Tile(int xPos, int yPos) : _xPos(xPos), _yPos(yPos) {};
 
 bool Tile::GetIsFlagged() {   return (_tileState == TileState::kFlagged);   }
 bool Tile::GetIsOpen() {   return (_tileState == TileState::kActive);   }
 bool Tile::GetIsMine() {   return _tileInformation.isMine == IsAMine::kMine;   }
 
-void Tile::OpenTile() {
-  if (_tileState != TileState::kInactive) {   return;   }
-  if (GetIsMine()) {
-    _gameHandler->SendActiveMineRequest();
-    return;
-  }
+int Tile::OpenTile() {
+  std::cout << "BBB";
+  if (_tileState != TileState::kInactive) {   return 0;   }
+  if (GetIsMine()) {   return 1;   }
   _tileState = kActive;
+  std::cout << "AAAA";
+  return 0;
 }
+
 void Tile::SwitchFlagTileState() {
   switch (_tileState) {
     case TileState::kInactive:

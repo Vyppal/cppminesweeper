@@ -1,13 +1,11 @@
 #pragma once
 
-#include "GameHandler.h"
 #include <string>
 
 enum IsAMine {
   kMine,
   kNonMine
 };
-
 
 enum TileState {
   /** The starting state of a tile (closed. unflagged) */
@@ -22,13 +20,13 @@ enum TileState {
 
 struct TileInformation {
   int adjacentMineCount = 0;
-  IsAMine isMine = kNonMine;
+  IsAMine isMine = IsAMine::kNonMine;
   std::string image = "inactive.png";
 };
 
 class Tile {
  public:
-  Tile(int xPos, int yPos, GameHandler *gameHandler);
+  Tile(int xPos, int yPos);
   
   // Check if the tile is flagged
   bool GetIsFlagged();
@@ -40,8 +38,8 @@ class Tile {
   int GetXPos();
   int GetYPos();
 
-  // Opens the tile if it's not open, nor flagged
-  void OpenTile();
+  // Opens the tile if it's not open, nor flagged. Returns 0 if not mine, 1 if is mine
+  int OpenTile();
   // Sets the tile to flagged if it is inactive, and inactive if it is flagged
   void SwitchFlagTileState();
   // "Highlights" the current tile
@@ -61,5 +59,4 @@ class Tile {
   int _xPos, _yPos;
   TileState _tileState = TileState::kInactive;
   TileInformation _tileInformation;
-  GameHandler *_gameHandler;
 };
