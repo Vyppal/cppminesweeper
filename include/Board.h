@@ -23,6 +23,7 @@ class Board {
   std::vector<Position> GetAdjacentTileCoordinates(Position tilePosition);
 
   void SchrodingerTiles(Position epicentre);
+  void UnSchrodingerTiles(Position epicentre);
   void OpenTileGroup(Position epicentre);
 
  private:

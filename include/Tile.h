@@ -44,6 +44,7 @@ class Tile {
   void SwitchFlagTileState();
   // "Highlights" the current tile
   void SchrodingerTile();
+  void UnSchrodingerTile();
 
   void SetMine();
   void AddAdjacentMine();

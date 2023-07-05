@@ -3,6 +3,7 @@
 #include "Board.h"
 
 #include <vector>
+#include <iostream>
 
 enum ClickType {
   kLeftMouse,
@@ -31,6 +32,10 @@ class GameHandler {
   int boardHeight = 10;
   BoardData boardData{boardWidth, boardHeight, 4};
   Board board{boardData};
+
+  std::vector<int> prevSchrodingeredTilePos{-1, -1};
+  std::vector<int> prevBoardPos{-1, -1};
+  bool activeSchrodinger = false;
 
 
 };

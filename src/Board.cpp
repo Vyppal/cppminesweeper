@@ -99,18 +99,29 @@ void Board::SchrodingerTiles(Position epicentre) {
     _board[pos.y][pos.x].SchrodingerTile();
   }
 }
+void Board::UnSchrodingerTiles(Position epicentre) {
+  std::vector<Position> adjacentPositions = GetAdjacentTileCoordinates(epicentre);
+  for (Position pos : adjacentPositions) {
+    _board[pos.y][pos.x].UnSchrodingerTile();
+  }
+}
 
 void Board::OpenTileGroup(Position epicentre) {
   std::vector<Position> adjacentPositions = GetAdjacentTileCoordinates(epicentre);
   Tile epicentreTile = _board[epicentre.y][epicentre.x];
   if (!epicentreTile.GetIsOpen()) {   return;   }
+  std::cout << "DDD";
   int adjacentFlagCount = 0;
   for (Position pos : adjacentPositions) {
     if (_board[epicentre.y][epicentre.x].GetIsFlagged()) {   adjacentFlagCount++;   }
   }
+  std::cout << adjacentFlagCount << std::endl;
+  std::cout << epicentreTile.GetInformation().adjacentMineCount << std::endl;
   if (adjacentFlagCount != epicentreTile.GetInformation().adjacentMineCount) {   return;   }
   for (Position pos : adjacentPositions) {
-    _board[epicentre.y][epicentre.x].OpenTile();
+    _board.at(epicentre.y).at(epicentre.x).OpenTile();
+    std::cout << pos.x << "," << pos.y << std::endl;
+    // std::cout << _board.at(epicentre.y).at(epicentre.x) << std::endl;
   }
 }
 

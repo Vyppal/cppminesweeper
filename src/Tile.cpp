@@ -9,12 +9,16 @@ bool Tile::GetIsOpen() {   return (_tileState == TileState::kActive);   }
 bool Tile::GetIsMine() {   return _tileInformation.isMine == IsAMine::kMine;   }
 
 int Tile::OpenTile() {
-  std::cout << "BBB";
-  if (_tileState != TileState::kInactive) {   return 0;   }
+  // if (_tileState != TileState::kInactive && _tileState != TileState::kSchrodinger) {   return 0;   }
+  if (_tileState == TileState::kInactive) {   std::cout << "i";   }
+  else if (_tileState == TileState::kFlagged) {   std::cout << "f";   }
+  else if (_tileState == TileState::kSchrodinger) {   std::cout << "s";   }
+  else if (_tileState == TileState::kActive) {   std::cout << "a";   }
   if (GetIsMine()) {   return 1;   }
+  std::cout << "w";
   _tileState = kActive;
-  std::cout << "AAAA";
   return 0;
+
 }
 
 void Tile::SwitchFlagTileState() {
@@ -32,6 +36,10 @@ void Tile::SwitchFlagTileState() {
 void Tile::SchrodingerTile() {
   if (_tileState != TileState::kInactive) {   return;   }
   _tileState = TileState::kSchrodinger;
+}
+void Tile::UnSchrodingerTile() {
+  if (_tileState != TileState::kSchrodinger) {   return;   }
+  _tileState = TileState::kInactive;
 }
 
 void Tile::SetMine() {
