@@ -20,55 +20,6 @@ GameHandler gameHandler{};
 BoardData boardData{BOARD_WIDTH, BOARD_HEIGHT, 4};
 Board board{boardData, &gameHandler};
 
-
-std::string GetSprite(Tile *tile) {
-  TileInformation tileInfo = tile->GetTileInformation();
-  std::string imagePath = "";
-  /*if (!tile->GetIsOpen()) {
-    imagePath += "inactive.png";
-  }
-  else */ if (tileInfo.isMine) {
-    imagePath += "mine.png";
-  }
-  else {
-    switch (tileInfo.adjacentMineCount) {
-      case 0:
-        imagePath += "zero.png";
-       break;
-      case 1:
-        imagePath += "one.png";
-       break;
-      case 2:
-        imagePath += "two.png";
-       break;
-      case 3:
-        imagePath += "three.png";
-       break;
-      case 4:
-        imagePath += "four.png";
-       break;
-      case 5:
-        imagePath += "five.png";
-       break;
-      case 6:
-        imagePath += "six.png";
-       break;
-      case 7:
-        imagePath += "seven.png";
-       break;
-      case 8:
-        imagePath += "eight.png";
-       break;
-      default:
-        imagePath += "zero.png";
-       break;
-    }
-  }
-  return imagePath;
-}
-
-
-
 int main(int argc, char* argv[]) {
   SDL_Init( SDL_INIT_EVERYTHING );
   SDL_Window *window = SDL_CreateWindow("minesweeper", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
@@ -95,12 +46,10 @@ int main(int argc, char* argv[]) {
     if (SDL_PollEvent(&windowEvent)) {
       if (SDL_QUIT == windowEvent.type) {  break;  }
     }
-
-
-
     for (auto row : board.GetBoard()) {
       for (auto tile : row) {
-        SDL_Surface *imageSurface1 = IMG_Load(("res/textures/" + GetSprite(&tile)).c_str());
+        tile.FinalizeTile();
+        SDL_Surface *imageSurface1 = IMG_Load(("res/textures/" + tile.GetSprite()).c_str());
         SDL_BlitScaled(imageSurface1, NULL, windowSurface, new SDL_Rect{tile.GetXPos() * TILE_SIZE, tile.GetYPos() * TILE_SIZE, TILE_SIZE, TILE_SIZE});
       }
     }

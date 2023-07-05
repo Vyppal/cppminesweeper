@@ -81,7 +81,7 @@ void Board::CreateNewBoard(BoardData boardData) {
         line += "X ";
       }
       else {
-        line += std::to_string(tile.GetTileInformation().adjacentMineCount);
+        line += std::to_string(tile.GetInformation().adjacentMineCount);
         line += " ";
       }
     }
