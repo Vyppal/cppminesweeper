@@ -30,7 +30,7 @@ class GameHandler {
   bool _isMineActive = false;
   int boardWidth = 10;
   int boardHeight = 10;
-  BoardData boardData{boardWidth, boardHeight, 4};
+  BoardData boardData{boardWidth, boardHeight, 10};
   Board board{boardData};
 
   std::vector<int> prevSchrodingeredTilePos{-1, -1};

@@ -24,9 +24,12 @@ class Board {
 
   void SchrodingerTiles(Position epicentre);
   void UnSchrodingerTiles(Position epicentre);
-  void OpenTileGroup(Position epicentre);
+  int OpenTileGroup(Position epicentre);
+
+  int OpenTile(Position tilePosition);
 
  private:
   BoardData _boardData;
   std::vector<std::vector<Tile>> _board;
+  std::vector<Position> _unprocessedZeros;
 };

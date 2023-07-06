@@ -106,26 +106,41 @@ void Board::UnSchrodingerTiles(Position epicentre) {
   }
 }
 
-void Board::OpenTileGroup(Position epicentre) {
+int Board::OpenTileGroup(Position epicentre) {
   std::vector<Position> adjacentPositions = GetAdjacentTileCoordinates(epicentre);
   Tile epicentreTile = _board[epicentre.y][epicentre.x];
-  if (!epicentreTile.GetIsOpen()) {   return;   }
-  std::cout << "DDD";
+  if (!epicentreTile.GetIsOpen()) {   return 0;   }
   int adjacentFlagCount = 0;
   for (Position pos : adjacentPositions) {
-    if (_board[epicentre.y][epicentre.x].GetIsFlagged()) {   adjacentFlagCount++;   }
+    if (_board[pos.y][pos.x].GetIsFlagged()) {   adjacentFlagCount++;   }
   }
-  std::cout << adjacentFlagCount << std::endl;
-  std::cout << epicentreTile.GetInformation().adjacentMineCount << std::endl;
-  if (adjacentFlagCount != epicentreTile.GetInformation().adjacentMineCount) {   return;   }
-  for (Position pos : adjacentPositions) {
-    _board.at(epicentre.y).at(epicentre.x).OpenTile();
-    std::cout << pos.x << "," << pos.y << std::endl;
-    // std::cout << _board.at(epicentre.y).at(epicentre.x) << std::endl;
+  if (adjacentFlagCount != epicentreTile.GetInformation().adjacentMineCount) {   return 0;   }
+  int tileResult = 0;
+  for (int index = 0; index < adjacentPositions.size(); index++) {
+    if (_board[adjacentPositions[index].y][adjacentPositions[index].x].GetIsOpen()) {
+      adjacentPositions.erase(adjacentPositions.begin() + index);
+    }
   }
+  do {
+    Position pos = adjacentPositions.at(0);
+    if (_board.at(pos.y).at(pos.x).GetIsOpen()) {   adjacentPositions.erase(adjacentPositions.begin());   continue;   }
+    tileResult = _board.at(pos.y).at(pos.x).OpenTile();
+    if (tileResult == 1) {   return 1;   }
+    if (tileResult == 2) {
+      std::vector<Position> positions = GetAdjacentTileCoordinates(pos);
+      adjacentPositions.insert(adjacentPositions.end(), positions.begin(), positions.end());
+    }
+  } while (adjacentPositions.size() > 0);
+  return 0;
 }
 
-
+int Board::OpenTile(Position tilePosition) {
+  std::cout << "aaa" << std::endl;
+  int tileResult = _board[tilePosition.y][tilePosition.x].OpenTile();
+  if (tileResult == 2) {   OpenTileGroup(tilePosition);   }
+  
+  return 0;
+}
 
 
 Board::Board(BoardData boardData) : _boardData(boardData) {

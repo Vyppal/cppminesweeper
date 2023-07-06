@@ -3,20 +3,17 @@
 #include <iostream>
 
 Tile::Tile(int xPos, int yPos) : _xPos(xPos), _yPos(yPos) {};
-
+ 
 bool Tile::GetIsFlagged() {   return (_tileState == TileState::kFlagged);   }
 bool Tile::GetIsOpen() {   return (_tileState == TileState::kActive);   }
 bool Tile::GetIsMine() {   return _tileInformation.isMine == IsAMine::kMine;   }
 
 int Tile::OpenTile() {
-  // if (_tileState != TileState::kInactive && _tileState != TileState::kSchrodinger) {   return 0;   }
-  if (_tileState == TileState::kInactive) {   std::cout << "i";   }
-  else if (_tileState == TileState::kFlagged) {   std::cout << "f";   }
-  else if (_tileState == TileState::kSchrodinger) {   std::cout << "s";   }
-  else if (_tileState == TileState::kActive) {   std::cout << "a";   }
+  if (_tileState != TileState::kInactive && _tileState != TileState::kSchrodinger) {   return 0;   }
   if (GetIsMine()) {   return 1;   }
-  std::cout << "w";
+  std::cout << "bbb" << std::endl;
   _tileState = kActive;
+  if (_tileInformation.adjacentMineCount == 0) {   return 2;   }
   return 0;
 
 }
