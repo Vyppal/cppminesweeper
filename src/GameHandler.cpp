@@ -4,6 +4,7 @@ GameHandler::GameHandler() {};
 
 void GameHandler::SendActiveMineRequest() {
   _isMineActive = true;
+  board.OpenAllMines();
 }
 
 Board *GameHandler::GetBoard() {
@@ -11,22 +12,24 @@ Board *GameHandler::GetBoard() {
 }
 
 void GameHandler::RegisterClick(std::vector<int> boardPos, ClickType clickType) {
-  int wasMine = 0;
+  int var = 0;
   switch (clickType) {
     case ClickType::kLeftMouse:
-      {
-        wasMine = board.OpenTile(Position{boardPos.at(0), boardPos.at(1)});
-        // wasMine = board.GetBoard()->at(boardPos.at(1)).at(boardPos.at(0)).OpenTile();
-        if (wasMine == 1) {   SendActiveMineRequest();   }
+      { // var acts as a variable named "wasMine"
+        var = board.OpenTile(Position{boardPos.at(0), boardPos.at(1)});
+        if (var == 1) {   SendActiveMineRequest();   }
        break;
       }
     case ClickType::kRightMouse:
-      board.GetBoard()->at(boardPos.at(1)).at(boardPos.at(0)).SwitchFlagTileState();
-     break;
+      { // var acts as a variable named "minesRemainingIncrementValue"
+        var = board.GetBoard()->at(boardPos.at(1)).at(boardPos.at(0)).SwitchFlagTileState();
+        minesRemaining += var;
+       break;
+      }
     case ClickType::kMiddleMouse:
-      {
-        wasMine = board.OpenTileGroup(Position{boardPos.at(0), boardPos.at(1)});
-        if (wasMine == 1) {   SendActiveMineRequest();   }
+      { // var acts as a variable named "wasMine"
+        var = board.OpenTileGroup(Position{boardPos.at(0), boardPos.at(1)});
+        if (var == 1) {   SendActiveMineRequest();   }
        break;
       }
     case ClickType::kMiddleMouseHold:
@@ -45,6 +48,10 @@ void GameHandler::RegisterClick(std::vector<int> boardPos, ClickType clickType) 
   }
 }
 
+
+int GameHandler::GetMinesRemaining() {
+  return minesRemaining;
+}
 
 std::vector<int> GameHandler::GetBoardDimensions() {
   return std::vector<int>(boardWidth, boardHeight);

@@ -41,7 +41,7 @@ class Tile {
   // Opens the tile if it's not open, nor flagged. Returns 0 if not mine, 1 if is mine
   int OpenTile();
   // Sets the tile to flagged if it is inactive, and inactive if it is flagged
-  void SwitchFlagTileState();
+  int SwitchFlagTileState();
   // "Highlights" the current tile
   void SchrodingerTile();
   void UnSchrodingerTile();

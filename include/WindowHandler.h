@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <vector>
 #include <bitset>
@@ -20,11 +21,15 @@ class WindowHandler {
   int EventHandler();
   void UpdateSprites();
   void End();
+
+  void UpdateMineCount(int minesRemaining);
   
   bool GetLeftMouseButtonUp();
   bool GetRightMouseButtonUp();
   bool GetMiddleMouseButtonUp();
   bool GetMiddleMouseButton();
+
+  void UpdateWindow();
   
   std::vector<int> GetBoardRelativeMousePos();
 
@@ -46,4 +51,9 @@ class WindowHandler {
 
   std::string mouseButState = std::bitset<5>(mouseButtonState).to_string();
   std::string prevMouseButState;
+
+  TTF_Font* font;
+  SDL_Color minesRemainingColour = {255, 0, 0};
+  SDL_Renderer *textRenderer;
+  
 };

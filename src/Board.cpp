@@ -70,8 +70,7 @@ void Board::CreateNewBoard(BoardData boardData) {
     }
   }
 
-
-
+  
   // Debugging print grid to console
   std::string line;
   for (auto row : _board) {
@@ -95,6 +94,7 @@ std::vector<std::vector<Tile>> *Board::GetBoard() {   return &_board;   }
 
 void Board::SchrodingerTiles(Position epicentre) {
   std::vector<Position> adjacentPositions = GetAdjacentTileCoordinates(epicentre);
+  adjacentPositions.push_back(epicentre);
   for (Position pos : adjacentPositions) {
     _board[pos.y][pos.x].SchrodingerTile();
   }
@@ -120,10 +120,10 @@ int Board::OpenTileGroup(Position epicentre) {
     if (_board[adjacentPositions[index].y][adjacentPositions[index].x].GetIsOpen()) {
       adjacentPositions.erase(adjacentPositions.begin() + index);
     }
-  }
+  }  
   do {
     Position pos = adjacentPositions.at(0);
-    if (_board.at(pos.y).at(pos.x).GetIsOpen()) {   adjacentPositions.erase(adjacentPositions.begin());   continue;   }
+    if (_board.at(pos.y).at(pos.x).GetIsOpen() || _board.at(pos.y).at(pos.x).GetIsFlagged()) {   adjacentPositions.erase(adjacentPositions.begin());   continue;   }
     tileResult = _board.at(pos.y).at(pos.x).OpenTile();
     if (tileResult == 1) {   return 1;   }
     if (tileResult == 2) {
@@ -135,13 +135,19 @@ int Board::OpenTileGroup(Position epicentre) {
 }
 
 int Board::OpenTile(Position tilePosition) {
-  std::cout << "aaa" << std::endl;
   int tileResult = _board[tilePosition.y][tilePosition.x].OpenTile();
   if (tileResult == 2) {   OpenTileGroup(tilePosition);   }
-  
-  return 0;
+  return tileResult;
 }
 
+void Board::OpenAllMines() {
+  for (int rowIndex = 0; rowIndex < _board.size(); rowIndex++) {
+    for (int tileIndex = 0; tileIndex < _board.at(rowIndex).size(); tileIndex++) {
+      Tile *tile = &(_board.at(rowIndex).at(tileIndex));
+      if (tile->GetIsMine()) {   tile->OpenTile();   }
+    }
+  }
+}
 
 Board::Board(BoardData boardData) : _boardData(boardData) {
   Board::CreateNewBoard(boardData);

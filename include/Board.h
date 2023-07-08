@@ -28,6 +28,8 @@ class Board {
 
   int OpenTile(Position tilePosition);
 
+  void OpenAllMines();
+
  private:
   BoardData _boardData;
   std::vector<std::vector<Tile>> _board;

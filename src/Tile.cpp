@@ -10,24 +10,23 @@ bool Tile::GetIsMine() {   return _tileInformation.isMine == IsAMine::kMine;   }
 
 int Tile::OpenTile() {
   if (_tileState != TileState::kInactive && _tileState != TileState::kSchrodinger) {   return 0;   }
+  _tileState = TileState::kActive;
   if (GetIsMine()) {   return 1;   }
-  std::cout << "bbb" << std::endl;
-  _tileState = kActive;
   if (_tileInformation.adjacentMineCount == 0) {   return 2;   }
   return 0;
 
 }
 
-void Tile::SwitchFlagTileState() {
+int Tile::SwitchFlagTileState() {
   switch (_tileState) {
     case TileState::kInactive:
       _tileState = TileState::kFlagged;
-     break;
+     return -1;
     case TileState::kFlagged:
       _tileState = TileState::kInactive;
-     break;
+     return 1;
     default:
-     break;
+     return 0;
   }
 }
 void Tile::SchrodingerTile() {

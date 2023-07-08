@@ -1,7 +1,7 @@
 #include "WindowHandler.h"
 
 WindowHandler::WindowHandler(GameHandler *gameHandler) : _gameHandler(gameHandler){
-  SDL_Init( SDL_INIT_EVERYTHING );
+  SDL_Init(SDL_INIT_EVERYTHING);
   window = SDL_CreateWindow("minesweeper", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
   if (window == NULL) {
     std::cout << "Could not create window: " << SDL_GetError() << std::endl;
@@ -12,6 +12,26 @@ WindowHandler::WindowHandler(GameHandler *gameHandler) : _gameHandler(gameHandle
     std::cout << "Could not create window: " << IMG_GetError() << std::endl;
     return;
   }
+  if (TTF_Init() < 0) {
+	  std::cout << "Error initializing SDL_ttf: " << TTF_GetError() << std::endl;
+  }
+  font = TTF_OpenFont("./res/fonts/font.ttf", 24);
+  if (!font) {
+	  std::cout << "Failed to load font: " << TTF_GetError() << std::endl;
+  }
+  if(font == NULL){
+    std::cout << "Font Failed: " << SDL_GetError() << std::endl;
+  }
+  
+  SDL_CreateRenderer(window, 1, 0);
+  std::cout << "Failed to load renderer: " << SDL_GetError() << std::endl;
+  textRenderer = SDL_GetRenderer(window);
+  std::cout << "Failed to load renderer: " << SDL_GetError() << std::endl;
+  SDL_SetRenderDrawColor(textRenderer, 255, 255, 255, 255);
+  if(textRenderer == NULL) {
+    std::cout << "Failed to load renderer: " << SDL_GetError() << std::endl;
+  }
+  SDL_CreateWindowAndRenderer
 }
 
 int WindowHandler::EventHandler() {
@@ -54,7 +74,6 @@ void WindowHandler::UpdateSprites() {
       // imageSurface = NULL;
     }
   }
-  SDL_UpdateWindowSurface( window );
 }
 
 
@@ -101,4 +120,22 @@ std::vector<int> WindowHandler::GetBoardRelativeMousePos() {
   }
   return std::vector<int>{-1, -1};
   
+}
+
+void WindowHandler::UpdateMineCount(int minesRemaining) {
+  SDL_Surface* surfaceMessage = TTF_RenderText_Solid(font, "a", minesRemainingColour); 
+  SDL_Texture* message = SDL_CreateTextureFromSurface(textRenderer, surfaceMessage);
+
+  SDL_Rect messageRect;
+  messageRect.x = 32;
+  messageRect.y = 32;
+  messageRect.w = 100; 
+  messageRect.h = 100;
+  SDL_RenderPresent(textRenderer);
+  SDL_RenderClear(textRenderer);
+  SDL_RenderCopy(textRenderer, message, nullptr, &messageRect);
+}
+
+void WindowHandler::UpdateWindow() {
+  SDL_UpdateWindowSurface(window);
 }

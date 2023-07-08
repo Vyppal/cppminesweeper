@@ -31,6 +31,8 @@ int main(int argc, char* argv[]) {
        break;
     };
     windowHandler.UpdateSprites();
+    windowHandler.UpdateMineCount(gameHandler.GetMinesRemaining());
+    windowHandler.UpdateWindow();
   } while (runGame);
 
   windowHandler.End();
