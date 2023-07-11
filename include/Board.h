@@ -2,6 +2,7 @@
 
 #include "Tile.h"
 #include <vector>
+#include <algorithm>
 
 struct BoardData {
   int width;
@@ -26,9 +27,13 @@ class Board {
   void UnSchrodingerTiles(Position epicentre);
   int OpenTileGroup(Position epicentre);
 
+  void DebugDisplayBoard();
+
   int OpenTile(Position tilePosition);
 
   void OpenAllMines();
+  void MoveAdjacentMines(Position epicentre);
+
 
  private:
   BoardData _boardData;

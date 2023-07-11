@@ -55,8 +55,14 @@ void Tile::UnSchrodingerTile() {
 void Tile::SetMine() {
   _tileInformation.isMine = kMine;
 }
+void Tile::SetNotMine() {
+  _tileInformation.isMine = kNonMine;
+}
 void Tile::AddAdjacentMine() {
   _tileInformation.adjacentMineCount = _tileInformation.adjacentMineCount + 1;
+}
+void Tile::RemoveAdjacentMine() {
+  _tileInformation.adjacentMineCount = _tileInformation.adjacentMineCount - 1;
 }
 TileInformation Tile::GetInformation() {
   return _tileInformation;

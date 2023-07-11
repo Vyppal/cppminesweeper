@@ -11,32 +11,41 @@ Board *GameHandler::GetBoard() {
   return &board;
 }
 
-void GameHandler::RegisterClick(std::vector<int> boardPos, ClickType clickType) {
+void GameHandler::RegisterClick(std::vector<int> boardPosition, ClickType clickType) {
+  Position boardPos{boardPosition.at(0), boardPosition.at(1)};
   int var = 0;
   switch (clickType) {
     case ClickType::kLeftMouse:
       { // var acts as a variable named "wasMine"
-        var = board.OpenTile(Position{boardPos.at(0), boardPos.at(1)});
+        if (!firstClick) {
+          var = board.OpenTile(boardPos);
+          if (var != 1) {   break;   }
+          SendActiveMineRequest();
+         break;
+        }
+        board.MoveAdjacentMines(boardPos);
+        firstClick = false;
+        var = board.OpenTile(boardPos);
         if (var == 1) {   SendActiveMineRequest();   }
        break;
       }
     case ClickType::kRightMouse:
       { // var acts as a variable named "minesRemainingIncrementValue"
-        var = board.GetBoard()->at(boardPos.at(1)).at(boardPos.at(0)).SwitchFlagTileState();
+        var = board.GetBoard()->at(boardPos.y).at(boardPos.x).SwitchFlagTileState();
         minesRemaining += var;
        break;
       }
     case ClickType::kMiddleMouse:
       { // var acts as a variable named "wasMine"
-        var = board.OpenTileGroup(Position{boardPos.at(0), boardPos.at(1)});
+        var = board.OpenTileGroup(boardPos);
         if (var == 1) {   SendActiveMineRequest();   }
        break;
       }
     case ClickType::kMiddleMouseHold:
-      if (prevBoardPos != boardPos) {
-        board.UnSchrodingerTiles(Position{prevSchrodingeredTilePos.at(0), prevSchrodingeredTilePos.at(1)});
+      if (prevBoardPos.x != boardPos.x && prevBoardPos.y != boardPos.y) {
+        board.UnSchrodingerTiles(prevSchrodingeredTilePos);
       }
-      board.SchrodingerTiles(Position{boardPos.at(0), boardPos.at(1)});
+      board.SchrodingerTiles(boardPos);
       activeSchrodinger = true;
       prevSchrodingeredTilePos = boardPos;
      break;
@@ -44,7 +53,7 @@ void GameHandler::RegisterClick(std::vector<int> boardPos, ClickType clickType) 
   prevBoardPos = boardPos;
   if (activeSchrodinger && clickType != ClickType::kMiddleMouseHold) {
     activeSchrodinger = false;
-    board.UnSchrodingerTiles(Position{prevSchrodingeredTilePos.at(0), prevSchrodingeredTilePos.at(1)});
+    board.UnSchrodingerTiles(prevSchrodingeredTilePos);
   }
 }
 

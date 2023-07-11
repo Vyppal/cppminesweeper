@@ -72,20 +72,8 @@ void Board::CreateNewBoard(BoardData boardData) {
 
   
   // Debugging print grid to console
-  std::string line;
-  for (auto row : _board) {
-    line = "";
-    for (auto tile : row) {
-      if (tile.GetIsMine()) {
-        line += "X ";
-      }
-      else {
-        line += std::to_string(tile.GetInformation().adjacentMineCount);
-        line += " ";
-      }
-    }
-    std::cout << line << std::endl;
-  }
+  DebugDisplayBoard();
+
 }
 
 std::vector<std::vector<Tile>> *Board::GetBoard() {   return &_board;   }
@@ -101,6 +89,7 @@ void Board::SchrodingerTiles(Position epicentre) {
 }
 void Board::UnSchrodingerTiles(Position epicentre) {
   std::vector<Position> adjacentPositions = GetAdjacentTileCoordinates(epicentre);
+  adjacentPositions.push_back(epicentre);
   for (Position pos : adjacentPositions) {
     _board[pos.y][pos.x].UnSchrodingerTile();
   }
@@ -146,6 +135,76 @@ void Board::OpenAllMines() {
       Tile *tile = &(_board.at(rowIndex).at(tileIndex));
       if (tile->GetIsMine()) {   tile->OpenTile();   }
     }
+  }
+}
+
+void Board::MoveAdjacentMines(Position epicentre) {
+  std::vector<Position> validNewPositions;
+  std::vector<Position> modifyPositions = GetAdjacentTileCoordinates(epicentre);
+  modifyPositions.push_back(epicentre);
+
+  int totalMovedMines = 0;
+
+  for (Position position : modifyPositions) {
+    if (!(_board[position.y][position.x].GetIsMine())) {   continue;   }
+    totalMovedMines++;
+    _board[position.y][position.x].SetNotMine();
+    std::vector<Position> adjacentPositions = GetAdjacentTileCoordinates(position);
+    for (Position adjacentPos : adjacentPositions) {
+      _board[adjacentPos.y][adjacentPos.x].RemoveAdjacentMine();
+    }
+  }
+  
+  for (int rowIndex = 0; rowIndex < _board.size(); rowIndex++) {
+    for (int tileIndex = 0; tileIndex < _board.at(rowIndex).size(); tileIndex++) {
+      Tile *tile = &(_board[rowIndex][tileIndex]);
+      if (tile->GetIsMine()) {   continue;   }
+
+
+      bool doesPosSurroundEpicentre = false;
+      for (Position position : modifyPositions) {
+        if (tileIndex == position.x && rowIndex == position.y) {
+          doesPosSurroundEpicentre = true;
+        }
+      }
+      if (!doesPosSurroundEpicentre) {
+        validNewPositions.push_back(Position{tileIndex, rowIndex});
+      }
+    }
+  }
+
+  srand((unsigned) time(NULL));
+	int randomTileIndex;
+  Position activePosition;
+
+  for (int placedMines = 0; placedMines < totalMovedMines; placedMines++) {
+    randomTileIndex = rand() % validNewPositions.size();
+    activePosition = validNewPositions[randomTileIndex];
+    _board[activePosition.y][activePosition.x].SetMine();
+    validNewPositions.erase(validNewPositions.begin() + randomTileIndex);
+    std::vector<Position> adjacentPositions = GetAdjacentTileCoordinates(activePosition);
+    for (Position pos : adjacentPositions) {
+      _board[pos.y][pos.x].AddAdjacentMine();
+    }
+  }
+  std::cout << " " << std::endl;
+  DebugDisplayBoard();
+}
+
+void Board::DebugDisplayBoard() {
+  std::string line;
+  for (auto row : _board) {
+    line = "";
+    for (auto tile : row) {
+      if (tile.GetIsMine()) {
+        line += "X ";
+      }
+      else {
+        line += std::to_string(tile.GetInformation().adjacentMineCount);
+        line += " ";
+      }
+    }
+    std::cout << line << std::endl;
   }
 }
 

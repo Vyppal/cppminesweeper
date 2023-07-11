@@ -49,7 +49,9 @@ class Tile {
   void UnSchrodingerTile();
 
   void SetMine();
+  void SetNotMine();
   void AddAdjacentMine();
+  void RemoveAdjacentMine();
 
   // Gets the tile\s current state
   TileState GetTileState();

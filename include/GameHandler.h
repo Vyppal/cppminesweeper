@@ -24,7 +24,7 @@ class GameHandler {
 
   std::vector<int> GetBoardDimensions();
   
-  void RegisterClick(std::vector<int> boardPos, ClickType clickType);
+  void RegisterClick(std::vector<int> boardPosition, ClickType clickType);
 
 
  private:
@@ -34,13 +34,17 @@ class GameHandler {
   int boardWidth = 10;
   int boardHeight = 10;
 
-  BoardData boardData{boardWidth, boardHeight, 4};
+  int MINE_INVERSE_DENSITY = 8;
+
+
+  BoardData boardData{boardWidth, boardHeight, 8};
   Board board{boardData};
 
-  std::vector<int> prevSchrodingeredTilePos{-1, -1};
-  std::vector<int> prevBoardPos{-1, -1};
+  Position prevSchrodingeredTilePos{-1, -1};
+  Position prevBoardPos{-1, -1};
   bool activeSchrodinger = false;
 
   int minesRemaining = boardData.width * boardData.height / boardData.mineDensity;
 
+  bool firstClick = true;
 };
