@@ -1,6 +1,8 @@
 #pragma once
 
 #include <string>
+#include <map>
+#include <iostream>
 
 enum IsAMine {
   kMine,
@@ -21,7 +23,7 @@ enum TileState {
 struct TileInformation {
   int adjacentMineCount = 0;
   IsAMine isMine = IsAMine::kNonMine;
-  std::string image = "inactive.png";
+  std::string image = "";
 };
 
 class Tile {
@@ -53,11 +55,13 @@ class Tile {
   TileState GetTileState();
   TileInformation GetInformation();
 
-  void FinalizeTile();
+  void UpdateSetSprite();
   std::string GetSprite();
 
  private:
   int _xPos, _yPos;
   TileState _tileState = TileState::kInactive;
+  std::string texturePath = "res/textures/";
   TileInformation _tileInformation;
+  std::map<int, std::string> imageMap;
 };

@@ -1,8 +1,17 @@
 #include "Tile.h"
-#include <map>
-#include <iostream>
 
-Tile::Tile(int xPos, int yPos) : _xPos(xPos), _yPos(yPos) {};
+Tile::Tile(int xPos, int yPos) : _xPos(xPos), _yPos(yPos) {
+  imageMap[0] = "zero.png";
+  imageMap[1] = "one.png";
+  imageMap[2] = "two.png";
+  imageMap[3] = "three.png";
+  imageMap[4] = "four.png";
+  imageMap[5] = "five.png";
+  imageMap[6] = "six.png";
+  imageMap[7] = "seven.png";
+  imageMap[8] = "eight.png";
+  UpdateSetSprite();
+};
  
 bool Tile::GetIsFlagged() {   return (_tileState == TileState::kFlagged);   }
 bool Tile::GetIsOpen() {   return (_tileState == TileState::kActive);   }
@@ -11,6 +20,7 @@ bool Tile::GetIsMine() {   return _tileInformation.isMine == IsAMine::kMine;   }
 int Tile::OpenTile() {
   if (_tileState != TileState::kInactive && _tileState != TileState::kSchrodinger) {   return 0;   }
   _tileState = TileState::kActive;
+  UpdateSetSprite();
   if (GetIsMine()) {   return 1;   }
   if (_tileInformation.adjacentMineCount == 0) {   return 2;   }
   return 0;
@@ -21,9 +31,11 @@ int Tile::SwitchFlagTileState() {
   switch (_tileState) {
     case TileState::kInactive:
       _tileState = TileState::kFlagged;
+      UpdateSetSprite();
      return -1;
     case TileState::kFlagged:
       _tileState = TileState::kInactive;
+      UpdateSetSprite();
      return 1;
     default:
      return 0;
@@ -32,10 +44,12 @@ int Tile::SwitchFlagTileState() {
 void Tile::SchrodingerTile() {
   if (_tileState != TileState::kInactive) {   return;   }
   _tileState = TileState::kSchrodinger;
+  UpdateSetSprite();
 }
 void Tile::UnSchrodingerTile() {
   if (_tileState != TileState::kSchrodinger) {   return;   }
   _tileState = TileState::kInactive;
+  UpdateSetSprite();
 }
 
 void Tile::SetMine() {
@@ -51,26 +65,15 @@ TileInformation Tile::GetInformation() {
 int Tile::GetXPos() {   return _xPos;   }
 int Tile::GetYPos() {   return _yPos;   }
 
-void Tile::FinalizeTile() {
+void Tile::UpdateSetSprite() {
   std::string imagePath;
-  std::map<int, std::string> Image;
-
-  Image[0] = "zero.png";
-  Image[1] = "one.png";
-  Image[2] = "two.png";
-  Image[3] = "three.png";
-  Image[4] = "four.png";
-  Image[5] = "five.png";
-  Image[6] = "six.png";
-  Image[7] = "seven.png";
-  Image[8] = "eight.png";
-  
+ 
   if (_tileState == TileState::kInactive) {   imagePath = "inactive.png";   }
   else if (_tileState == TileState::kFlagged) {   imagePath = "flag.png";   }
   else if (_tileState == TileState::kSchrodinger) {   imagePath = "zero.png";   }
   else if (GetIsMine()) {   imagePath = "mine.png";   }
-  else {   imagePath = Image[_tileInformation.adjacentMineCount];   }
-  _tileInformation.image = imagePath;
+  else {   imagePath = imageMap[_tileInformation.adjacentMineCount];   }
+  _tileInformation.image = texturePath + imagePath;
 }
 
 std::string Tile::GetSprite() {   return _tileInformation.image;   }

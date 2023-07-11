@@ -52,8 +52,8 @@ class WindowHandler {
   std::string mouseButState = std::bitset<5>(mouseButtonState).to_string();
   std::string prevMouseButState;
 
-  TTF_Font* font;
+  TTF_Font* font = NULL;
   SDL_Color minesRemainingColour = {255, 0, 0};
-  SDL_Renderer *textRenderer;
-  
+  SDL_Renderer *renderer = NULL;
+  SDL_Surface *minesRemainingSurface = NULL;
 };

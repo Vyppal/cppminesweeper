@@ -1,6 +1,6 @@
 #include "WindowHandler.h"
 
-WindowHandler::WindowHandler(GameHandler *gameHandler) : _gameHandler(gameHandler){
+WindowHandler::WindowHandler(GameHandler *gameHandler) : _gameHandler(gameHandler) {
   SDL_Init(SDL_INIT_EVERYTHING);
   window = SDL_CreateWindow("minesweeper", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_ALLOW_HIGHDPI);
   if (window == NULL) {
@@ -22,16 +22,19 @@ WindowHandler::WindowHandler(GameHandler *gameHandler) : _gameHandler(gameHandle
   if(font == NULL){
     std::cout << "Font Failed: " << SDL_GetError() << std::endl;
   }
-  
-  SDL_CreateRenderer(window, 1, 0);
-  std::cout << "Failed to load renderer: " << SDL_GetError() << std::endl;
-  textRenderer = SDL_GetRenderer(window);
-  std::cout << "Failed to load renderer: " << SDL_GetError() << std::endl;
-  SDL_SetRenderDrawColor(textRenderer, 255, 255, 255, 255);
-  if(textRenderer == NULL) {
-    std::cout << "Failed to load renderer: " << SDL_GetError() << std::endl;
+}
+
+void WindowHandler::UpdateSprites() {
+  std::vector<std::vector<Tile>> *board = _gameHandler->GetBoard()->GetBoard();
+  for (int rowNum = 0; rowNum < board->size(); rowNum++) {
+    std::vector<Tile> row = board->at(rowNum);
+    for (int tileNum = 0; tileNum < row.size(); tileNum++) {
+      Tile tile = row[tileNum];
+      SDL_Surface *imageSurface = IMG_Load(tile.GetSprite().c_str());
+      if (imageSurface == NULL) {   std::cout << "SDL could not load image! SDL Error: " << SDL_GetError() << std::endl;   return;   }
+      SDL_BlitScaled(imageSurface, NULL, windowSurface, new SDL_Rect{START_X + tile.GetXPos() * TILE_SIZE, START_Y + tile.GetYPos() * TILE_SIZE, TILE_SIZE, TILE_SIZE});
+    }
   }
-  // SDL_CreateWindowAndRenderer;
 }
 
 int WindowHandler::EventHandler() {
@@ -40,7 +43,6 @@ int WindowHandler::EventHandler() {
   prevMouseButState = mouseButState;
   mouseButState = std::bitset<5>(mouseButtonState).to_string();
 
-  
   std::vector<int> boardMousePos = GetBoardRelativeMousePos();
   if (boardMousePos.at(0) != -1) {
     ClickType clickType = ClickType::kNone;
@@ -60,31 +62,12 @@ int WindowHandler::EventHandler() {
   return 0;
 }
 
-void WindowHandler::UpdateSprites() {
-  std::vector<std::vector<Tile>> *board = _gameHandler->GetBoard()->GetBoard();
-  for (int rowNum = 0; rowNum < board->size(); rowNum++) {
-    std::vector<Tile> row = board->at(rowNum);
-    for (int tileNum = 0; tileNum < row.size(); tileNum++) {
-      Tile tile = row[tileNum];
-      tile.FinalizeTile();
-      SDL_Surface *imageSurface = IMG_Load(("res/textures/" + tile.GetSprite()).c_str());
-      if (imageSurface == NULL) {   std::cout << "SDL could not load image! SDL Error: " << SDL_GetError() << std::endl;   return;   }
-      SDL_BlitScaled(imageSurface, NULL, windowSurface, new SDL_Rect{START_X + tile.GetXPos() * TILE_SIZE, START_Y + tile.GetYPos() * TILE_SIZE, TILE_SIZE, TILE_SIZE});
-      // SDL_FreeSurface(imageSurface);
-      // imageSurface = NULL;
-    }
-  }
-}
-
-
 void WindowHandler::End() {
   SDL_FreeSurface(windowSurface);
   windowSurface = NULL;
   SDL_DestroyWindow(window);
   SDL_Quit();
 }
-
-
 
 bool WindowHandler::GetLeftMouseButtonUp() {
   if (prevMouseButState[4] == '1'){   return mouseButState[4] == '0';   }
@@ -119,21 +102,19 @@ std::vector<int> WindowHandler::GetBoardRelativeMousePos() {
     }
   }
   return std::vector<int>{-1, -1};
-  
 }
 
 void WindowHandler::UpdateMineCount(int minesRemaining) {
-  SDL_Surface* surfaceMessage = TTF_RenderText_Solid(font, std::to_string(minesRemaining).c_str(), minesRemainingColour); 
-  SDL_Texture* message = SDL_CreateTextureFromSurface(textRenderer, surfaceMessage);
+  minesRemainingSurface = SDL_CreateRGBSurface(0, 64, 32, 32, 0, 0, 0, 0);
+  SDL_FillRect(minesRemainingSurface, NULL, SDL_MapRGBA(minesRemainingSurface->format, 0, 0, 0, 0));
 
-  SDL_Rect messageRect;
-  messageRect.x = 32;
-  messageRect.y = 32;
-  messageRect.w = 64; 
-  messageRect.h = 32;
-  SDL_RenderPresent(textRenderer);
-  SDL_RenderClear(textRenderer);
-  SDL_RenderCopy(textRenderer, message, nullptr, &messageRect);
+  SDL_BlitSurface(
+    TTF_RenderText_Solid(font, std::to_string(minesRemaining).c_str(), minesRemainingColour),
+    NULL,
+    minesRemainingSurface,
+    NULL
+  );
+  SDL_BlitSurface(minesRemainingSurface, NULL, windowSurface, NULL);
 }
 
 void WindowHandler::UpdateWindow() {
