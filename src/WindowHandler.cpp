@@ -31,7 +31,7 @@ WindowHandler::WindowHandler(GameHandler *gameHandler) : _gameHandler(gameHandle
   if(textRenderer == NULL) {
     std::cout << "Failed to load renderer: " << SDL_GetError() << std::endl;
   }
-  SDL_CreateWindowAndRenderer
+  // SDL_CreateWindowAndRenderer;
 }
 
 int WindowHandler::EventHandler() {
@@ -110,7 +110,7 @@ std::vector<int> WindowHandler::GetBoardRelativeMousePos() {
   int bottomRightX = START_X + TILE_SIZE * boardDimensions.at(0);
   int bottomRightY = START_Y + TILE_SIZE * boardDimensions.at(1);
 
-  if (START_X <= mouseX && mouseX<= bottomRightX) {
+  if (START_X <= mouseX && mouseX <= bottomRightX) {
     if (START_Y <= mouseY && mouseY <= bottomRightY) {
       return std::vector<int>{
         static_cast<int>(floor((mouseX - START_X) / TILE_SIZE)),
@@ -123,14 +123,14 @@ std::vector<int> WindowHandler::GetBoardRelativeMousePos() {
 }
 
 void WindowHandler::UpdateMineCount(int minesRemaining) {
-  SDL_Surface* surfaceMessage = TTF_RenderText_Solid(font, "a", minesRemainingColour); 
+  SDL_Surface* surfaceMessage = TTF_RenderText_Solid(font, std::to_string(minesRemaining).c_str(), minesRemainingColour); 
   SDL_Texture* message = SDL_CreateTextureFromSurface(textRenderer, surfaceMessage);
 
   SDL_Rect messageRect;
   messageRect.x = 32;
   messageRect.y = 32;
-  messageRect.w = 100; 
-  messageRect.h = 100;
+  messageRect.w = 64; 
+  messageRect.h = 32;
   SDL_RenderPresent(textRenderer);
   SDL_RenderClear(textRenderer);
   SDL_RenderCopy(textRenderer, message, nullptr, &messageRect);
